@@ -8,56 +8,45 @@ const CartItem = ({ onContinueShopping }) => {
   const dispatch = useDispatch();
 
   // Calculate total amount for all products in the cart
-  const calculateTotalAmount = (cart) => {
+  const calculateTotalAmount = () => {
     let total = 0;
+    cart.forEach(item => {
+      const price = parseFloat(item.cost.substring(1)); // removes $ and parses to number
+      total += price * item.quantity;
+    });
+    return total.toFixed(2); // returns string like "30.00"
 
-    if (cart) {
-        cart.forEach((item) => {
-        const quantity = item.quantity;
-        const cost = parseFloat(item.cost.substring(1)); // αφαιρεί το $ και το κάνει αριθμό
-        total += quantity * cost;
-     });
-
-    }
-
-    return total;
- };
-
-  const handleContinueShopping = (e) => {
-    if (onContinueShopping) {
-        onContinueShopping(e);
-    }
   };
 
+  const handleContinueShopping = (e) => {
+    e.preventDefault(); // optional: prevents default button behavior
+    onContinueShopping(e); // call the function passed from parent
+   
+  };
   const handleCheckoutShopping = (e) => {
     alert('Functionality to be added for future reference');
   };
-
   const handleIncrement = (item) => {
-    dispatch(updateQuantity({
-        name: item.name,
-        quantity: item.quantity + 1
-    }));
+    dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
   };
-
+  
   const handleDecrement = (item) => {
     if (item.quantity > 1) {
-        dispatch(updateQuantity({
-        name: item.name,
-        quantity: item.quantity - 1
-        }));
+      dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
     } else {
-        dispatch(removeItem(item.name));
+      dispatch(removeItem(item.name));
     }
   };
+
+
   const handleRemove = (item) => {
     dispatch(removeItem(item.name));
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
-    const unitPrice = parseFloat(item.cost.substring(1)); 
-    return unitPrice * item.quantity;
+    const price = parseFloat(item.cost.substring(1)); // convert "$10.00" → 10.00
+  return (price * item.quantity).toFixed(2); // returns string like "20.00"
   };
 
   return (
@@ -85,12 +74,10 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1" onClick={handleCheckoutShopping}>Checkout</button>
+        <button className="get-started-button1" onClick={(e) => handleCheckoutShopping(e)}>Checkout</button>
       </div>
     </div>
   );
 };
 
 export default CartItem;
-
-
