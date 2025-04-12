@@ -11,11 +11,14 @@ const CartItem = ({ onContinueShopping }) => {
   const calculateTotalAmount = (cart) => {
     let total = 0;
 
-    cart.forEach((item) => {
+    if (cart) {
+        cart.forEach((item) => {
         const quantity = item.quantity;
         const cost = parseFloat(item.cost.substring(1)); // αφαιρεί το $ και το κάνει αριθμό
         total += quantity * cost;
-    });
+     });
+
+    }
 
     return total;
  };
@@ -82,7 +85,7 @@ const CartItem = ({ onContinueShopping }) => {
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
-        <button className="get-started-button1">Checkout</button>
+        <button className="get-started-button1" onClick={handleCheckoutShopping}>Checkout</button>
       </div>
     </div>
   );
